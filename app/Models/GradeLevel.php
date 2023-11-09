@@ -13,4 +13,19 @@ class GradeLevel extends Model
     protected $fillable = [
         'gradeLevel', 'gradeLabel'
     ];
+
+    public function studentRecord()
+    {
+        return $this->hasMany(StudentRecord::class, 'gradeId', 'id');
+    }
+
+    public function advisoryClasses()
+    {
+        return $this->hasMany(AdvisoryClass::class, 'gradeId', 'id');
+    }
+
+    public function facultySchedule()
+    {
+        return $this->hasMany(FacultySchedule::class, 'gradeId', 'id');
+    }
 }

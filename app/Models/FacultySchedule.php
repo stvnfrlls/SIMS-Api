@@ -13,4 +13,19 @@ class FacultySchedule extends Model
     protected $fillable = [
         'academicYear', 'facultyId', 'subjectId', 'gradeId', 'startTime', 'endTime',
     ];
+
+    public function facultyRecord()
+    {
+        return $this->belongsTo(facultyRecord::class, 'facultyId', 'id');
+    }
+
+    public function gradeLevel()
+    {
+        return $this->belongsTo(GradeLevel::class, 'gradeId', 'id');
+    }
+
+    public function curriculum()
+    {
+        return $this->belongsTo(Curriculum::class, 'subjectId', 'id');
+    }
 }

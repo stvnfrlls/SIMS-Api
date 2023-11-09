@@ -43,4 +43,19 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
     ];
+
+    public function studentRecord()
+    {
+        return $this->hasMany(StudentRecord::class, 'userId', 'id');
+    }
+
+    public function facultyRecord()
+    {
+        return $this->hasMany(FacultyRecord::class, 'userId', 'id');
+    }
+
+    public function userAddress()
+    {
+        return $this->hasOne(UserAddress::class, 'userId', 'id');
+    }
 }

@@ -13,4 +13,19 @@ class FacultyRecord extends Model
     protected $fillable = [
         'userId', 'firstName', 'middleName', 'lastName', 'suffix', 'gender', 'age', 'birthday',
     ];
+
+    public function user()
+    {
+        return $this->belongsTo(User::class, 'userId', 'id');
+    }
+
+    public function advisoryClasses()
+    {
+        return $this->hasMany(AdvisoryClass::class, 'facultyId', 'id');
+    }
+
+    public function facultySchedule()
+    {
+        return $this->hasMany(FacultySchedule::class, 'facultyId', 'id');
+    }
 }

@@ -13,4 +13,9 @@ class AttendanceRecord extends Model
     protected $fillable = [
         'academicYear', 'studentId', 'timeIn', 'timeOut', 'status',
     ];
+
+    public function studentRecord()
+    {
+        return $this->belongsTo(StudentRecord::class, 'studentId', 'id');
+    }
 }

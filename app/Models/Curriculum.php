@@ -13,4 +13,14 @@ class Curriculum extends Model
     protected $fillable = [
         'subjectCode', 'subjectName', 'minYearLevel', 'maxYearLevel',
     ];
+
+    public function academicRecord()
+    {
+        return $this->hasMany(AcademicRecord::class, 'subjectId', 'id');
+    }
+
+    public function facultySchedule()
+    {
+        return $this->hasMany(FacultySchedule::class, 'subjectId', 'id');
+    }
 }

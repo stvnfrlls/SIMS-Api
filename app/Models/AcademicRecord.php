@@ -13,4 +13,14 @@ class AcademicRecord extends Model
     protected $fillable = [
         'academicYear', 'studentId', 'subjectId', 'gradeValue',
     ];
+
+    public function studentRecord()
+    {
+        return $this->belongsTo(StudentRecord::class, 'studentId', 'id');
+    }
+
+    public function curricula()
+    {
+        return $this->belongsTo(Curriculum::class, 'subjectId', 'id');
+    }
 }

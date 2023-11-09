@@ -13,4 +13,9 @@ class CityMunicipality extends Model
     protected $fillable = [
         'city', 'zip', 'state', 'region',
     ];
+
+    public function city()
+    {
+        return $this->hasMany(UserAddress::class, 'cityId', 'id');
+    }
 }

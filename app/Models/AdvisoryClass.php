@@ -13,4 +13,14 @@ class AdvisoryClass extends Model
     protected $fillable = [
         'academicYear', 'gradeLevel', 'facultyId',
     ];
+
+    public function facultyRecord()
+    {
+        return $this->belongsTo(FacultyRecord::class, 'facultyId', 'id');
+    }
+
+    public function gradeLevel()
+    {
+        return $this->belongsTo(GradeLevel::class, 'gradeId', 'id');
+    }
 }
