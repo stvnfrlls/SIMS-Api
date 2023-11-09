@@ -10,56 +10,43 @@ class UserAddressController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function getAllAddress()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $userAddresses = UserAddress::orderBy("created_at", "desc")->paginate(10);
+        return response()->json($userAddresses);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function storeUserAddress(Request $request)
     {
-        //
+        $userAddress = UserAddress::create($request->all());
+        return response()->json($userAddress);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(UserAddress $userAddress)
+    public function getUserAddress(UserAddress $userAddress)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(UserAddress $userAddress)
-    {
-        //
+        return response()->json($userAddress);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, UserAddress $userAddress)
+    public function updateUserAddress(Request $request, UserAddress $userAddress)
     {
-        //
+        $userAddress->update($request->all());
+        return response()->json($userAddress);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(UserAddress $userAddress)
+    public function deleteUserAddress(UserAddress $userAddress)
     {
-        //
+        $userAddress->delete();
     }
 }

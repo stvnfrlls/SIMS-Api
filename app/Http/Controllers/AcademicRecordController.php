@@ -7,59 +7,82 @@ use Illuminate\Http\Request;
 
 class AcademicRecordController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function getAll()
     {
-        //
+        $academicRecords = AcademicRecord::orderBy("gradeQuarter")->get();
+
+        foreach ($academicRecords as $academicRecord) {
+            $academicRecord->load('studentRecord');
+            $academicRecord->load('curricula');
+        }
+
+        $academicRecords = $academicRecords->map(function ($academicRecord) {
+            return $this->transfromRecord($academicRecord);
+        });
+
+        return response()->json($academicRecords);
+    }
+    public function storeRecord(Request $request)
+    {
+        $academicRecord = AcademicRecord::create($request->all());
+        return response()->json($academicRecord);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function getRecord($academicRecord)
     {
-        //
+        $academicRecords = AcademicRecord::where("studentId", $academicRecord)
+            ->orderBy("gradeQuarter")
+            ->get();
+
+        foreach ($academicRecords as $academicRecord) {
+            $academicRecord->load('curricula');
+        }
+
+        // Group academic records by gradeQuarter
+        $groupedRecords = $academicRecords->groupBy('gradeQuarter');
+
+        $groupedRecordsArray = [];
+
+        foreach ($groupedRecords as $quarter => $records) {
+            $groupedRecordsArray[] = [
+                'quarter' => $quarter,
+                'records' => $records->map(function ($record) {
+                    return [
+                        'subject' => $record->curricula->subjectName,
+                        'grade' => $record->gradeValue,
+                    ];
+                })->all(),
+            ];
+        }
+
+        return response()->json([
+            'studentId' => $academicRecord->studentId,
+            'academicRecords' => $groupedRecordsArray,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function updateRecord(Request $request, AcademicRecord $academicRecord)
     {
-        //
+        $academicRecord->update($request->all());
+        return response()->json($academicRecord);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(AcademicRecord $academicRecord)
+    public function destroyRecord(AcademicRecord $academicRecord)
     {
-        //
+        $academicRecord->delete();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(AcademicRecord $academicRecord)
+    public function transfromRecord($records)
     {
-        //
-    }
+        $gradesArray = $records->toArray();
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, AcademicRecord $academicRecord)
-    {
-        //
-    }
+        $gradesArray = array_diff_key($gradesArray, array_flip(['id', 'academicYear', 'subjectId', 'deleted_at', 'created_at', 'updated_at']));
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(AcademicRecord $academicRecord)
-    {
-        //
+        $curriculaData = $gradesArray['curricula'];
+        unset($gradesArray['curricula']);
+
+        $gradesArray['subjectName'] = $curriculaData['subjectName'];
+
+        return $gradesArray;
     }
 }

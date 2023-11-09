@@ -12,15 +12,8 @@ class CityMunicipalityController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $cities = CityMunicipality::all();
+        return response()->json($cities);
     }
 
     /**
@@ -28,38 +21,32 @@ class CityMunicipalityController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $cities = CityMunicipality::create($request->all());
+        return response()->json($cities);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(CityMunicipality $cityMunicipality)
+    public function show(CityMunicipality $cityMunicipalities)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(CityMunicipality $cityMunicipality)
-    {
-        //
+        return response()->json($cityMunicipalities);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, CityMunicipality $cityMunicipality)
+    public function update(Request $request, CityMunicipality $cityMunicipalities)
     {
-        //
+        $cities = CityMunicipality::find($request->id);
+        $cities->update($request->all());
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(CityMunicipality $cityMunicipality)
+    public function destroy(CityMunicipality $cityMunicipalities)
     {
-        //
+        $cityMunicipalities->delete();
     }
 }

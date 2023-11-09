@@ -12,15 +12,8 @@ class AttendanceRecordController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $record = AttendanceRecord::latest()->paginate(10);
+        return response()->json($record);
     }
 
     /**
@@ -28,7 +21,8 @@ class AttendanceRecordController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $record = AttendanceRecord::create($request->all());
+        return response()->json($record);
     }
 
     /**
@@ -36,15 +30,7 @@ class AttendanceRecordController extends Controller
      */
     public function show(AttendanceRecord $attendanceRecord)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(AttendanceRecord $attendanceRecord)
-    {
-        //
+        return response()->json($attendanceRecord);
     }
 
     /**
@@ -52,7 +38,9 @@ class AttendanceRecordController extends Controller
      */
     public function update(Request $request, AttendanceRecord $attendanceRecord)
     {
-        //
+        $record = AttendanceRecord::find($attendanceRecord->id);
+        $record->update($request->all());
+        return response()->json($record);
     }
 
     /**
@@ -60,6 +48,7 @@ class AttendanceRecordController extends Controller
      */
     public function destroy(AttendanceRecord $attendanceRecord)
     {
-        //
+        $record = AttendanceRecord::find($attendanceRecord->id);
+        $record->delete();
     }
 }

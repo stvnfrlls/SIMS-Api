@@ -12,15 +12,8 @@ class GradeLevelController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $gradeLevels = GradeLevel::all();
+        return response()->json($gradeLevels);
     }
 
     /**
@@ -28,7 +21,8 @@ class GradeLevelController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $gradeLevel = GradeLevel::create($request->all());
+        return response()->json($gradeLevel);
     }
 
     /**
@@ -36,15 +30,8 @@ class GradeLevelController extends Controller
      */
     public function show(GradeLevel $gradeLevel)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(GradeLevel $gradeLevel)
-    {
-        //
+        $gradeLevel = GradeLevel::find($gradeLevel->id);
+        return response()->json($gradeLevel);
     }
 
     /**
@@ -52,7 +39,8 @@ class GradeLevelController extends Controller
      */
     public function update(Request $request, GradeLevel $gradeLevel)
     {
-        //
+        $gradeLevel->update($request->all());
+        return response()->json($gradeLevel);
     }
 
     /**
@@ -60,6 +48,6 @@ class GradeLevelController extends Controller
      */
     public function destroy(GradeLevel $gradeLevel)
     {
-        //
+        $gradeLevel->delete();
     }
 }

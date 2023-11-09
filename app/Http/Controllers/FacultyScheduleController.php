@@ -7,59 +7,90 @@ use Illuminate\Http\Request;
 
 class FacultyScheduleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function getall()
     {
-        //
+        $schedules = FacultySchedule::with(['facultyRecord', 'curriculum', 'gradeLevel'])
+            ->select('facultyId', 'subjectId', 'gradeId', 'startTime', 'endTime')
+            ->orderBy('startTime')
+            ->get();
+
+        $transformedSchedules = $schedules->map(function ($schedule) {
+            return $this->transformSchedule($schedule);
+        });
+
+        return response()->json($transformedSchedules);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function storeSchedule(Request $request)
     {
-        //
+        $faculty = FacultySchedule::create($request->all());
+        return response()->json($faculty);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function getSchedule($facultySchedule)
     {
-        //
+        $schedule = FacultySchedule::select('facultyId', 'subjectId', 'gradeId', 'startTime', 'endTime')
+            ->with(['facultyRecord', 'curriculum', 'gradeLevel'])
+            ->where('facultyId', $facultySchedule)
+            ->orderBy('startTime')
+            ->get();
+
+        $transformedSchedules = $schedule->map(function ($schedule) {
+            return $this->transformSchedule($schedule);
+        });
+
+        return response()->json($transformedSchedules);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(FacultySchedule $facultySchedule)
+    public function updateSchedule(Request $request, FacultySchedule $facultySchedule)
     {
-        //
+        $facultySchedule->update($request->all());
+        return response()->json($facultySchedule);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(FacultySchedule $facultySchedule)
+    public function destroySchedule(FacultySchedule $facultySchedule)
     {
-        //
+        $facultySchedule->delete();
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, FacultySchedule $facultySchedule)
+    public function transformSchedule($schedule)
     {
-        //
-    }
+        $scheduleArray = $schedule->toArray();
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(FacultySchedule $facultySchedule)
-    {
-        //
+        $keysToUnset = [
+            'faculty_record' => ['id', 'userId', 'gender', 'age', 'birthday', 'deleted_at', 'created_at', 'updated_at'],
+            'curriculum' => ['id', 'subjectCode', 'minYearLevel', 'maxYearLevel', 'deleted_at'],
+            'grade_level' => ['id', 'gradeLevel', 'deleted_at'],
+        ];
+
+        foreach ($keysToUnset as $relation => $keys) {
+            if (isset($scheduleArray[$relation])) {
+                foreach ($keys as $key) {
+                    unset($scheduleArray[$relation][$key]);
+                }
+            }
+        }
+
+        $faculty_record = $scheduleArray['faculty_record'];
+        unset($scheduleArray['faculty_record']);
+        unset($scheduleArray['facultyId']);
+
+        $facultyName = $faculty_record['suffix']
+            ? $faculty_record['lastName'] . ', ' . $faculty_record['firstName'] . ' ' . $faculty_record['middleName']
+            : $faculty_record['lastName'] . ' ' . $faculty_record['suffix'] . '. ' . $faculty_record['firstName'] . ' ' . $faculty_record['middleName'];
+
+        $scheduleArray['facultyName'] = $facultyName;
+
+        $curriculum = $scheduleArray['curriculum'];
+        unset($scheduleArray['curriculum']);
+        unset($scheduleArray['subjectId']);
+        $scheduleArray['curriculum'] = $curriculum['subjectName'];
+
+        $grade_level = $scheduleArray['grade_level'];
+        unset($scheduleArray['grade_level']);
+        unset($scheduleArray['gradeId']);
+        $scheduleArray['grade_level'] = $grade_level['gradeLabel'] . ' - ' . $grade_level['sectionName'];
+
+        return $scheduleArray;
     }
 }

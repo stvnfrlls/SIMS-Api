@@ -10,56 +10,43 @@ class FacultyRecordController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function getAllFaculty()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $faculties = FacultyRecord::all();
+        return response()->json($faculties);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function storeFaculty(Request $request)
     {
-        //
+        $faculty = FacultyRecord::create($request->all());
+        return response()->json($faculty);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(FacultyRecord $facultyRecord)
+    public function getFaculty(FacultyRecord $facultyRecord)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(FacultyRecord $facultyRecord)
-    {
-        //
+        return response()->json($facultyRecord);
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, FacultyRecord $facultyRecord)
+    public function updateFaculty(Request $request, FacultyRecord $facultyRecord)
     {
-        //
+        $facultyRecord->update($request->all());
+        return response()->json($facultyRecord);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(FacultyRecord $facultyRecord)
+    public function destroyFaculty(FacultyRecord $facultyRecord)
     {
-        //
+        $facultyRecord->delete();
     }
 }
