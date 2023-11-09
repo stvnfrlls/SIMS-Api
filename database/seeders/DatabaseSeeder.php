@@ -15,5 +15,8 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         CityMunicipality::factory()->count(30)->create();
+
+        $this->call(GradeLevelSeeder::class);
+        $this->call(CurriculumSeeder::class);
     }
 }
