@@ -15,20 +15,23 @@ return [
     |
     */
 
+    // 'paths' => ['oauth/*', 'api/*', 'sanctum/csrf-cookie'],
     'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
+    // 'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => ['*'], // Replace with the actual origin of your frontend app
 
-    'allowed_origins_patterns' => [],
+    'allowed_origins_patterns' => ['*'],
 
     'allowed_headers' => ['*'],
 
-    'exposed_headers' => [],
+    'exposed_headers' => ['*'],
 
-    'max_age' => 0,
+    // Set the maximum age in seconds, e.g., 1 hour
+    'max_age' => 60 * 60,
 
-    'supports_credentials' => false,
+    'supports_credentials' => true, // If your API supports user credentials (e.g., cookies or tokens)
 
 ];
