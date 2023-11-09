@@ -17,7 +17,10 @@ class CityMunicipalityFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'city' => \Faker\Factory::create()->city,
+            'zip' => \Faker\Factory::create()->postcode,
+            'state' => \Faker\Factory::create()->state,
+            'region' => \Faker\Factory::create()->word, // Modify this to generate region data as needed
         ];
     }
 }

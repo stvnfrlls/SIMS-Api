@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('city_municipalities', function (Blueprint $table) {
             $table->id();
+            $table->string('city');
+            $table->string('zip');
+            $table->string('state');
+            $table->string('region');
+            $table->softDeletes();
             $table->timestamps();
         });
     }
