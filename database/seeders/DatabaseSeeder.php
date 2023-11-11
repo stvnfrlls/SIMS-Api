@@ -17,9 +17,14 @@ class DatabaseSeeder extends Seeder
         CityMunicipality::factory()->count(30)->create();
 
         $this->call(CurriculumSeeder::class);
-        $this->call(GradeLevelSeeder::class);
         $this->call(UserSeeder::class);
-        $this->call(StudentRecordSeeder::class);
+        $this->call(GradeLevelSeeder::class);
+
         $this->call(FacultyRecordSeeder::class);
+        $this->call(StudentRecordSeeder::class);
+
+        $this->call(AcademicRecordSeeder::class);
+        $this->call(FacultyScheduleSeeder::class);
+        $this->call(AdvisoryClassSeeder::class);
     }
 }
