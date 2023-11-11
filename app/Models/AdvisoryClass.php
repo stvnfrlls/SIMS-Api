@@ -11,7 +11,7 @@ class AdvisoryClass extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'academicYear', 'gradeLevel', 'facultyId',
+        'academicYear', 'gradeId', 'facultyId',
     ];
 
     public function facultyRecord()
