@@ -9,7 +9,10 @@ class AcademicRecordController extends Controller
 {
     public function getAll()
     {
-        $academicRecords = AcademicRecord::orderBy("gradeQuarter")->get();
+        $academicRecords = AcademicRecord::orderBy("gradeQuarter")
+            ->orderBy('studentId')
+            ->orderBy("gradeQuarter")
+            ->get();
 
         foreach ($academicRecords as $academicRecord) {
             $academicRecord->load('studentRecord');
@@ -17,11 +20,14 @@ class AcademicRecordController extends Controller
         }
 
         $academicRecords = $academicRecords->map(function ($academicRecord) {
-            return $this->transfromRecord($academicRecord);
+            return $this->transformRecord($academicRecord);
         });
 
-        return response()->json($academicRecords);
+        $groupedRecords = $academicRecords->groupBy('gradeQuarter');
+
+        return response()->json($groupedRecords);
     }
+
     public function storeRecord(Request $request)
     {
         $academicRecord = AcademicRecord::create($request->all());
@@ -72,17 +78,52 @@ class AcademicRecordController extends Controller
         $academicRecord->delete();
     }
 
-    public function transfromRecord($records)
+    public function transformRecord($data)
     {
-        $gradesArray = $records->toArray();
+        $data = $data->toArray();
 
-        $gradesArray = array_diff_key($gradesArray, array_flip(['id', 'academicYear', 'subjectId', 'deleted_at', 'created_at', 'updated_at']));
+        // Define keys to remove
+        $academicRecordKeys = [
+            'id',
+            'academicYear',
+            'subjectId',
+            'deleted_at',
+            'created_at',
+            'updated_at'
+        ];
 
-        $curriculaData = $gradesArray['curricula'];
-        unset($gradesArray['curricula']);
+        $modifiedData = array_diff_key($data, array_flip($academicRecordKeys));
 
-        $gradesArray['subjectName'] = $curriculaData['subjectName'];
+        $studentRecordKeys = [
+            'id',
+            'userId',
+            'gradeId',
+            'gender',
+            'age',
+            'birthday',
+            'deleted_at',
+            'created_at',
+            'updated_at'
+        ];
 
-        return $gradesArray;
+        $modifiedData['student_record'] = array_diff_key($data['student_record'], array_flip($studentRecordKeys));
+
+        $curriculaRecordKeys = [
+            'id',
+            'subjectCode',
+            'minYearLevel',
+            'maxYearLevel',
+            'deleted_at',
+        ];
+
+        $modifiedData['curricula'] = array_diff_key($data['curricula'], array_flip($curriculaRecordKeys));
+
+        $modifiedData['studentName'] = $modifiedData['student_record']['lastName'] . ', ' . $modifiedData['student_record']['firstName'] . ' ' . strtoupper(substr($modifiedData['student_record']['middleName'], 0, 1)) . '. ' . $modifiedData['student_record']['suffix'];
+        unset($modifiedData['student_record']);
+
+        $modifiedData['subjectName'] = $modifiedData['curricula']['subjectName'];
+        unset($modifiedData['curricula']);
+
+        return $modifiedData;
     }
 }
