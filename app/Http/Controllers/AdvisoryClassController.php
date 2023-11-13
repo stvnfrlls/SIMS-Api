@@ -7,25 +7,28 @@ use Illuminate\Http\Request;
 
 class AdvisoryClassController extends Controller
 {
-    public function index()
+    public function getAllAdvisoryClass()
     {
         $advisoryClass = AdvisoryClass::select('academicYear', 'gradeId', 'facultyId')->get();
         $advisoryClass->load('facultyRecord');
         $advisoryClass->load('gradeLevel');
 
         $transformedAdvisoryClass = $advisoryClass->map(function ($advisoryData) {
-            return $this->transforAdvisoryClass($advisoryData);
+            return $this->transformAdvisoryClass($advisoryData);
         });
 
-        return response()->json($transformedAdvisoryClass);
+        $groupedRecords = $transformedAdvisoryClass->groupBy('academicYear');
+
+        return response()->json($groupedRecords);
     }
-    public function store(Request $request)
+
+    public function storeAdvisoryClass(Request $request)
     {
         $advisoryClass = AdvisoryClass::create($request->all());
         return response()->json($advisoryClass);
     }
 
-    public function show($advisoryClass)
+    public function getAdvisoryClass($advisoryClass)
     {
         $advisoryData = AdvisoryClass::select('academicYear', 'gradeId', 'facultyId')
             ->where('gradeId', $advisoryClass)
@@ -35,24 +38,24 @@ class AdvisoryClassController extends Controller
         $advisoryData->load('gradeLevel');
 
         $transformedAdvisoryClass = $advisoryData->map(function ($advisoryData) {
-            return $this->transforAdvisoryClass($advisoryData);
+            return $this->transformAdvisoryClass($advisoryData);
         });
 
         return response()->json($transformedAdvisoryClass);
     }
 
-    public function update(Request $request, AdvisoryClass $advisoryClass)
+    public function updateAdvisoryClass(Request $request, AdvisoryClass $advisoryClass)
     {
         $advisoryClass->update($request->all());
         return response()->json($advisoryClass);
     }
 
-    public function destroy(AdvisoryClass $advisoryClass)
+    public function destroyAdvisoryClass(AdvisoryClass $advisoryClass)
     {
         $advisoryClass->delete();
     }
 
-    public function transforAdvisoryClass($advisoryClass)
+    public function transformAdvisoryClass($advisoryClass)
     {
         $advisoryArray = $advisoryClass->toArray();
 
