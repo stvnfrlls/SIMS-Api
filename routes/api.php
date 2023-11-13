@@ -4,7 +4,7 @@ use App\Http\Controllers\AcademicRecordController;
 use App\Http\Controllers\AdvisoryClassController;
 use App\Http\Controllers\AttendanceRecordController;
 use App\Http\Controllers\AuthController;
-use App\Http\Controllers\CityMunicipalitiesController;
+use App\Http\Controllers\CityMunicipalityController;
 use App\Http\Controllers\ClasslistController;
 use App\Http\Controllers\CurriculumController;
 use App\Http\Controllers\FacultyRecordController;
@@ -14,7 +14,6 @@ use App\Http\Controllers\GradeSectionController;
 use App\Http\Controllers\StudentRecordController;
 use App\Http\Controllers\UserAddressController;
 use App\Http\Controllers\UserController;
-use App\Models\AttendanceRecord;
 use Illuminate\Support\Facades\Route;
 
 Route::middleware("api")->group(function () {
@@ -68,11 +67,11 @@ Route::middleware("auth:api")->group(function () {
 
     Route::prefix("/tools")->group(function () {
         Route::prefix("/advisory")->group(function () {
-            Route::get("/", [AdvisoryClassController::class, "index"]);
-            Route::get("{advisoryClass}", [AdvisoryClassController::class, "show"]);
-            Route::post("store", [AdvisoryClassController::class, "store"]);
-            Route::post("{advisoryClass}", [AdvisoryClassController::class, "update"]);
-            Route::post("{advisoryClass}", [AdvisoryClassController::class, "delete"]);
+            Route::get("/", [AdvisoryClassController::class, "getAllAdvisoryClass"]);
+            Route::get("{advisoryClass}", [AdvisoryClassController::class, "getAdvisoryClass"]);
+            Route::post("store", [AdvisoryClassController::class, "storeAdvisoryClass"]);
+            Route::post("{advisoryClass}", [AdvisoryClassController::class, "updateAdvisoryClass"]);
+            Route::post("{advisoryClass}", [AdvisoryClassController::class, "deleteAdvisoryClass"]);
         });
 
         Route::prefix("/attendance")->group(function () {
@@ -84,11 +83,11 @@ Route::middleware("auth:api")->group(function () {
         });
 
         Route::prefix("/citymunicipality")->group(function () {
-            Route::get("/", [CityMunicipalitiesController::class, "index"]);
-            Route::get("{cityMunicipalities}", [CityMunicipalitiesController::class, "show"]);
-            Route::post("store", [CityMunicipalitiesController::class, "store"]);
-            Route::post("{cityMunicipalities}", [CityMunicipalitiesController::class, "update"]);
-            Route::post("{cityMunicipalities}", [CityMunicipalitiesController::class, "delete"]);
+            Route::get("/", [CityMunicipalityController::class, "index"]);
+            Route::get("{cityMunicipalities}", [CityMunicipalityController::class, "show"]);
+            Route::post("store", [CityMunicipalityController::class, "store"]);
+            Route::post("{cityMunicipalities}", [CityMunicipalityController::class, "update"]);
+            Route::post("{cityMunicipalities}", [CityMunicipalityController::class, "delete"]);
         });
 
         Route::prefix("/classlist")->group(function () {
