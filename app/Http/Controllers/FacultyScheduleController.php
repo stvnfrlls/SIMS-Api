@@ -84,7 +84,7 @@ class FacultyScheduleController extends Controller
         $curriculum = $scheduleArray['curriculum'];
         unset($scheduleArray['curriculum']);
         unset($scheduleArray['subjectId']);
-        $scheduleArray['curriculum'] = $curriculum['subjectName'];
+        $scheduleArray['subjectName'] = $curriculum['subjectName'];
 
         $grade_level = $scheduleArray['grade_level'];
         unset($scheduleArray['grade_level']);
