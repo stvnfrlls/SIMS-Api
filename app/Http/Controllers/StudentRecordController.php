@@ -13,7 +13,22 @@ class StudentRecordController extends Controller
     public function getAllStudent()
     {
         $studentRecord = StudentRecord::all();
-        return response()->json($studentRecord);
+        $studentRecord->load("user");
+        $studentRecord->load("gradeLevels");
+        // $studentRecord->load("attendanceRecord");
+        $studentRecord->load("academicRecord");
+
+        $studentRecord->each(function ($studentData) {
+            $studentData->academicRecord->each(function ($academicRecord) {
+                $academicRecord->load("curricula");
+            });
+        });
+
+        $modifiedData = $studentRecord->map(function ($studentRecord) {
+            return $this->transformStudentRecord($studentRecord);
+        });
+
+        return response()->json($modifiedData);
     }
 
     /**
@@ -28,10 +43,26 @@ class StudentRecordController extends Controller
     /**
      * Display the specified resource.
      */
-    public function getStudent(StudentRecord $studentRecord)
+    public function getStudent($studentRecord)
     {
-        $studentRecord = StudentRecord::find($studentRecord->id);
-        return response()->json($studentRecord);
+        $studentRecord = StudentRecord::where('id', $studentRecord)->get();
+
+        $studentRecord->load("user");
+        $studentRecord->load("gradeLevels");
+        // $studentRecord->load("attendanceRecord");
+        $studentRecord->load("academicRecord");
+
+        $studentRecord->each(function ($studentData) {
+            $studentData->academicRecord->each(function ($academicRecord) {
+                $academicRecord->load("curricula");
+            });
+        });
+
+        $modifiedData = $studentRecord->map(function ($studentRecord) {
+            return $this->transformStudentRecord($studentRecord);
+        });
+
+        return response()->json($modifiedData);
     }
 
     /**
@@ -49,5 +80,80 @@ class StudentRecordController extends Controller
     public function destroyStudent(StudentRecord $studentRecord)
     {
         $studentRecord->delete();
+    }
+
+    public function transformStudentRecord($data)
+    {
+        $data = $data->toArray();
+
+        $studentRecordKeys = [
+            'id',
+            'userId',
+            'gradeId',
+            'deleted_at',
+            'created_at',
+            'updated_at',
+        ];
+
+        $modifiedData = array_diff_key($data, array_flip($studentRecordKeys));
+
+        $userKeys = [
+            'id',
+            'email_verified_at',
+            'deleted_at',
+            'created_at',
+            'updated_at',
+        ];
+
+        $modifiedData['user'] = array_diff_key($data['user'], array_flip($userKeys));
+
+        $modifiedData['userId'] = $modifiedData['user']['user_id'];
+        $modifiedData['emailAddress'] = $modifiedData['user']['email'];
+        $modifiedData['fullName'] = $modifiedData['lastName'] . ', ' . $modifiedData['suffix'] . '' . $modifiedData['firstName'] . ' ' . $modifiedData['middleName'] . ' ' . $modifiedData['suffix'];
+
+        unset(
+            $modifiedData['lastName'],
+            $modifiedData['firstName'],
+            $modifiedData['middleName'],
+            $modifiedData['suffix'],
+            $modifiedData['user']
+            );
+
+        $gradeLevelsKeys = [
+            'id',
+            'deleted_at',
+        ];
+
+        $modifiedData['grade_levels'] = array_diff_key($data['grade_levels'], array_flip($gradeLevelsKeys));
+
+        $modifiedData['gradeSection'] = $modifiedData['grade_levels']['gradeLabel'] . ' - ' . $modifiedData['grade_levels']['sectionName'];
+        unset($modifiedData['grade_levels']);
+
+        $academicRecordKeys = [
+            'id',
+            'studentId',
+            'subjectId',
+            'created_at',
+            'updated_at',
+            'deleted_at',
+        ];
+
+        $modifiedData['academic_record'] = array_map(function ($record) use ($academicRecordKeys) {
+            // Unset the desired keys for each record
+            foreach ($academicRecordKeys as $key) {
+                unset($record[$key]);
+            }
+
+            // Unset the desired key in the 'curricula' sub-array
+            $record['subjectName'] = $record['curricula']['subjectName'];
+            unset($record['curricula']);
+
+            return $record;
+        }, $data['academic_record']);
+
+        $modifiedData['grades'] = $modifiedData['academic_record'];
+        unset($modifiedData['academic_record']);
+
+        return $modifiedData;
     }
 }
