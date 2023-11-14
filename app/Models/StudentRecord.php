@@ -11,7 +11,15 @@ class StudentRecord extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'userId', 'firstName', 'middleName', 'lastName', 'suffix', 'gender', 'age', 'birthday', 'gradeId'
+        'userId',
+        'firstName',
+        'middleName',
+        'lastName',
+        'suffix',
+        'gender',
+        'age',
+        'birthday',
+        'gradeId'
     ];
 
     public function user()
@@ -29,7 +37,7 @@ class StudentRecord extends Model
         return $this->hasMany(AttendanceRecord::class, 'studentId', 'id');
     }
 
-    public function gradeLevels()
+    public function gradeLevel()
     {
         return $this->belongsTo(GradeLevel::class, 'gradeId', 'id');
     }

@@ -9,9 +9,9 @@ class AdvisoryClassController extends Controller
 {
     public function getAllAdvisoryClass()
     {
-        $advisoryClass = AdvisoryClass::select('academicYear', 'gradeId', 'facultyId')->get();
-        $advisoryClass->load('facultyRecord');
-        $advisoryClass->load('gradeLevel');
+        $advisoryClass = AdvisoryClass::select('academicYear', 'gradeId', 'facultyId')
+            ->with("facultyRecord", "gradeLevel")
+            ->get();
 
         $transformedAdvisoryClass = $advisoryClass->map(function ($advisoryData) {
             return $this->transformAdvisoryClass($advisoryData);
@@ -31,11 +31,9 @@ class AdvisoryClassController extends Controller
     public function getAdvisoryClass($advisoryClass)
     {
         $advisoryData = AdvisoryClass::select('academicYear', 'gradeId', 'facultyId')
+            ->with("facultyRecord", "gradeLevel")
             ->where('gradeId', $advisoryClass)
             ->get();
-
-        $advisoryData->load('facultyRecord');
-        $advisoryData->load('gradeLevel');
 
         $transformedAdvisoryClass = $advisoryData->map(function ($advisoryData) {
             return $this->transformAdvisoryClass($advisoryData);

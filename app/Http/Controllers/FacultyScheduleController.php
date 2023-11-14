@@ -30,7 +30,7 @@ class FacultyScheduleController extends Controller
     public function getSchedule($facultySchedule)
     {
         $schedule = FacultySchedule::select('facultyId', 'subjectId', 'gradeId', 'startTime', 'endTime')
-            ->with(['facultyRecord', 'curriculum', 'gradeLevel'])
+            ->with('facultyRecord', 'curriculum', 'gradeLevel')
             ->where('facultyId', $facultySchedule)
             ->orderBy('startTime')
             ->get();

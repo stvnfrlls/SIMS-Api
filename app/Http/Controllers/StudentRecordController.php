@@ -12,11 +12,10 @@ class StudentRecordController extends Controller
      */
     public function getAllStudent()
     {
-        $studentRecord = StudentRecord::all();
-        $studentRecord->load("user");
-        $studentRecord->load("gradeLevels");
+        $studentRecord = StudentRecord::with("user", "gradeLevel", "academicRecord")
+            ->all();
+
         // $studentRecord->load("attendanceRecord");
-        $studentRecord->load("academicRecord");
 
         $studentRecord->each(function ($studentData) {
             $studentData->academicRecord->each(function ($academicRecord) {
@@ -45,12 +44,11 @@ class StudentRecordController extends Controller
      */
     public function getStudent($studentRecord)
     {
-        $studentRecord = StudentRecord::where('id', $studentRecord)->get();
+        $studentRecord = StudentRecord::with("user", "gradeLevel", "academicRecord")
+            ->where('id', $studentRecord)
+            ->get();
 
-        $studentRecord->load("user");
-        $studentRecord->load("gradeLevels");
         // $studentRecord->load("attendanceRecord");
-        $studentRecord->load("academicRecord");
 
         $studentRecord->each(function ($studentData) {
             $studentData->academicRecord->each(function ($academicRecord) {

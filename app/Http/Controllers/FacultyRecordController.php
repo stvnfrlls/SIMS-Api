@@ -10,25 +10,16 @@ class FacultyRecordController extends Controller
 
     public function getAllFaculty()
     {
-        $faculties = FacultyRecord::all();
-
-        $faculties->load("user");
-        $faculties->load("advisoryClasses");
-        $faculties->load("facultySchedule");
+        $faculties = FacultyRecord::with("user", "advisoryClasses", "facultySchedule")
+            ->all();
 
         $faculties->each(function ($faculty) {
             $faculty->advisoryClasses->each(function ($advisoryClass) {
                 $advisoryClass->load('gradeLevel');
             });
-        });
-
-        $faculties->each(function ($faculty) {
             $faculty->facultySchedule->each(function ($gradeLevel) {
                 $gradeLevel->load('gradeLevel');
             });
-        });
-
-        $faculties->each(function ($faculty) {
             $faculty->facultySchedule->each(function ($subject) {
                 $subject->load('curriculum');
             });
@@ -59,15 +50,9 @@ class FacultyRecordController extends Controller
             $faculty->advisoryClasses->each(function ($advisoryClass) {
                 $advisoryClass->load('gradeLevel');
             });
-        });
-
-        $facultyRecordCollection->each(function ($faculty) {
             $faculty->facultySchedule->each(function ($gradeLevel) {
                 $gradeLevel->load('gradeLevel');
             });
-        });
-
-        $facultyRecordCollection->each(function ($faculty) {
             $faculty->facultySchedule->each(function ($subject) {
                 $subject->load('curriculum');
             });

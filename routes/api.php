@@ -122,14 +122,6 @@ Route::middleware("auth:api")->group(function () {
             Route::post("{gradeLevel}", [GradeLevelController::class, "delete"]);
         });
 
-        Route::prefix("/sections")->group(function () {
-            Route::get("/", [GradeSectionController::class, "index"]);
-            Route::get("{gradeSection}", [GradeSectionController::class, "show"]);
-            Route::post("store", [GradeSectionController::class, "store"]);
-            Route::post("{gradeSection}", [GradeSectionController::class, "update"]);
-            Route::post("{gradeSection}", [GradeSectionController::class, "delete"]);
-        });
-
         Route::prefix("/schedule")->group(function () {
             Route::get("/", [FacultyScheduleController::class, "getAll"]);
             Route::get("{facultySchedule}", [FacultyScheduleController::class, "getSchedule"]);

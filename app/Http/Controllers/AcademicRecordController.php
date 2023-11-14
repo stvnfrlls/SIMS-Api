@@ -9,15 +9,11 @@ class AcademicRecordController extends Controller
 {
     public function getAll()
     {
-        $academicRecords = AcademicRecord::orderBy("gradeQuarter")
-            ->orderBy('studentId')
+        $academicRecords = AcademicRecord::with("studentRecord", "curricula")
+            ->orderBy("gradeQuarter")
+            ->orderBy("studentId")
             ->orderBy("gradeQuarter")
             ->get();
-
-        foreach ($academicRecords as $academicRecord) {
-            $academicRecord->load('studentRecord');
-            $academicRecord->load('curricula');
-        }
 
         $academicRecords = $academicRecords->map(function ($academicRecord) {
             return $this->transformRecord($academicRecord);
@@ -36,13 +32,10 @@ class AcademicRecordController extends Controller
 
     public function getRecord($academicRecord)
     {
-        $academicRecords = AcademicRecord::where("studentId", $academicRecord)
+        $academicRecords = AcademicRecord::with('curricula')
+            ->where("studentId", $academicRecord)
             ->orderBy("gradeQuarter")
             ->get();
-
-        foreach ($academicRecords as $academicRecord) {
-            $academicRecord->load('curricula');
-        }
 
         // Group academic records by gradeQuarter
         $groupedRecords = $academicRecords->groupBy('gradeQuarter');
