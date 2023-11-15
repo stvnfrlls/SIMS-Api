@@ -4,7 +4,7 @@ namespace App\Http\Requests\AcademicRecord;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class storeAcademicRecord extends FormRequest
+class AcademicRecordRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.

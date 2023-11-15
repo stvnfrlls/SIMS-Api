@@ -4,7 +4,7 @@ namespace App\Http\Requests\FacultySchedule;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class storeFacultySchedule extends FormRequest
+class FacultyScheduleRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
