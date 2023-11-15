@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FacultyScheduleRequest;
 use App\Models\FacultySchedule;
-use Illuminate\Http\Request;
 
 class FacultyScheduleController extends Controller
 {
@@ -21,7 +21,7 @@ class FacultyScheduleController extends Controller
         return response()->json($transformedSchedules);
     }
 
-    public function storeSchedule(Request $request)
+    public function storeSchedule(FacultyScheduleRequest $request)
     {
         $faculty = FacultySchedule::create($request->all());
         return response()->json($faculty);
@@ -42,7 +42,7 @@ class FacultyScheduleController extends Controller
         return response()->json($transformedSchedules);
     }
 
-    public function updateSchedule(Request $request, FacultySchedule $facultySchedule)
+    public function updateSchedule(FacultyScheduleRequest $request, FacultySchedule $facultySchedule)
     {
         $facultySchedule->update($request->all());
         return response()->json($facultySchedule);

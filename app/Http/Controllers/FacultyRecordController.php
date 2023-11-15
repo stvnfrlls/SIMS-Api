@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\FacultyRecordRequest;
 use App\Models\FacultyRecord;
-use Illuminate\Http\Request;
 
 class FacultyRecordController extends Controller
 {
@@ -32,7 +32,7 @@ class FacultyRecordController extends Controller
         return response()->json($modifiedData);
     }
 
-    public function storeFaculty(Request $request)
+    public function storeFaculty(FacultyRecordRequest $request)
     {
         $faculty = FacultyRecord::create($request->all());
         return response()->json($faculty);
@@ -65,8 +65,7 @@ class FacultyRecordController extends Controller
         return response()->json($modifiedData);
     }
 
-
-    public function updateFaculty(Request $request, FacultyRecord $facultyRecord)
+    public function updateFaculty(FacultyRecordRequest $request, FacultyRecord $facultyRecord)
     {
         $facultyRecord->update($request->all());
         return response()->json($facultyRecord);

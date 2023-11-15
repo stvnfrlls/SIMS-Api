@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UserRequest;
 use App\Models\User;
-use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 
 class UserController extends Controller
@@ -11,14 +11,12 @@ class UserController extends Controller
     public function getAll()
     {
         $users = User::all();
-
         return response()->json($users);
     }
 
-    public function storeUser(Request $request)
+    public function storeUser(UserRequest $request)
     {
         $user = User::create($request->all());
-
         return response()->json($user);
     }
 
@@ -34,7 +32,7 @@ class UserController extends Controller
         return response()->json($user);
     }
 
-    public function updateUser(Request $request, User $user)
+    public function updateUser(UserRequest $request, User $user)
     {
         $user->update($request->all());
         return response()->json($user);

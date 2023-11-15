@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StudentRecordRequest;
 use App\Models\StudentRecord;
-use Illuminate\Http\Request;
 
 class StudentRecordController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function getAllStudent()
     {
         $studentRecord = StudentRecord::with("user", "gradeLevel", "academicRecord")
@@ -30,18 +27,12 @@ class StudentRecordController extends Controller
         return response()->json($modifiedData);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function storeStudent(Request $request)
+    public function storeStudent(StudentRecordRequest $request)
     {
         $studentRecord = StudentRecord::create($request->all());
         return response()->json($studentRecord);
     }
 
-    /**
-     * Display the specified resource.
-     */
     public function getStudent($studentRecord)
     {
         $studentRecord = StudentRecord::with("user", "gradeLevel", "academicRecord")
@@ -63,18 +54,12 @@ class StudentRecordController extends Controller
         return response()->json($modifiedData);
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function updateStudent(Request $request, StudentRecord $studentRecord)
+    public function updateStudent(StudentRecordRequest $request, StudentRecord $studentRecord)
     {
         $studentRecord->update($request->all());
         return response()->json($studentRecord);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroyStudent(StudentRecord $studentRecord)
     {
         $studentRecord->delete();

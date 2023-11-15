@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AdvisoryClassRequest;
 use App\Models\AdvisoryClass;
-use Illuminate\Http\Request;
 
 class AdvisoryClassController extends Controller
 {
@@ -22,7 +22,7 @@ class AdvisoryClassController extends Controller
         return response()->json($groupedRecords);
     }
 
-    public function storeAdvisoryClass(Request $request)
+    public function storeAdvisoryClass(AdvisoryClassRequest $request)
     {
         $advisoryClass = AdvisoryClass::create($request->all());
         return response()->json($advisoryClass);
@@ -42,7 +42,7 @@ class AdvisoryClassController extends Controller
         return response()->json($transformedAdvisoryClass);
     }
 
-    public function updateAdvisoryClass(Request $request, AdvisoryClass $advisoryClass)
+    public function updateAdvisoryClass(AdvisoryClassRequest $request, AdvisoryClass $advisoryClass)
     {
         $advisoryClass->update($request->all());
         return response()->json($advisoryClass);

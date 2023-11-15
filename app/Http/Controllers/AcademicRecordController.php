@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\AcademicRecordRequest;
 use App\Models\AcademicRecord;
-use Illuminate\Http\Request;
 
 class AcademicRecordController extends Controller
 {
@@ -24,7 +24,7 @@ class AcademicRecordController extends Controller
         return response()->json($groupedRecords);
     }
 
-    public function storeRecord(Request $request)
+    public function storeRecord(AcademicRecordRequest $request)
     {
         $academicRecord = AcademicRecord::create($request->all());
         return response()->json($academicRecord);
@@ -60,7 +60,7 @@ class AcademicRecordController extends Controller
         ]);
     }
 
-    public function updateRecord(Request $request, AcademicRecord $academicRecord)
+    public function updateRecord(AcademicRecordRequest $request, AcademicRecord $academicRecord)
     {
         $academicRecord->update($request->all());
         return response()->json($academicRecord);
