@@ -3,6 +3,8 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Contracts\Validation\Validator;
+use Illuminate\Http\Exceptions\HttpResponseException;
 
 class UserAddressRequest extends FormRequest
 {
@@ -27,5 +29,10 @@ class UserAddressRequest extends FormRequest
             "barangay" => "required|max:255",
             "cityId" => "required|exists:city_municipalities,id",
         ];
+    }
+
+    protected function failedValidation(Validator $validator)
+    {
+        throw new HttpResponseException(response()->json($validator->errors(), 422));
     }
 }
