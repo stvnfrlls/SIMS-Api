@@ -7,7 +7,6 @@ use App\Models\FacultyRecord;
 
 class FacultyRecordController extends Controller
 {
-
     public function getAllFaculty()
     {
         $faculties = FacultyRecord::with("user", "advisoryClasses", "facultySchedule")
@@ -67,13 +66,16 @@ class FacultyRecordController extends Controller
 
     public function updateFaculty(FacultyRecordRequest $request, FacultyRecord $facultyRecord)
     {
-        $facultyRecord->update($request->all());
-        return response()->json($facultyRecord);
+        $faculty = FacultyRecord::findOrFail($facultyRecord->id);
+        $faculty->update($request->all());
+        return response()->json($faculty);
     }
 
     public function destroyFaculty(FacultyRecord $facultyRecord)
     {
-        $facultyRecord->delete();
+        $faculty = FacultyRecord::findOrFail($facultyRecord->id);
+        $faculty->delete();
+        return response()->json(null, 200);
     }
 
     public function transformFacultyRecord($data)

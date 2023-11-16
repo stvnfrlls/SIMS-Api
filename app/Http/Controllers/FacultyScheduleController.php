@@ -44,13 +44,16 @@ class FacultyScheduleController extends Controller
 
     public function updateSchedule(FacultyScheduleRequest $request, FacultySchedule $facultySchedule)
     {
-        $facultySchedule->update($request->all());
-        return response()->json($facultySchedule);
+        $schedule = FacultySchedule::findOrFail($request->id);
+        $schedule->update($request->all());
+        return response()->json($schedule);
     }
 
     public function destroySchedule(FacultySchedule $facultySchedule)
     {
-        $facultySchedule->delete();
+        $faculty = FacultySchedule::findOrFail($facultySchedule->id);
+        $faculty->delete();
+        return response()->json(null, 200);
     }
 
     public function transformSchedule($schedule)

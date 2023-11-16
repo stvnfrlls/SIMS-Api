@@ -62,13 +62,16 @@ class AcademicRecordController extends Controller
 
     public function updateRecord(AcademicRecordRequest $request, AcademicRecord $academicRecord)
     {
+        $academicRecord = AcademicRecord::findOrFail($academicRecord->id);
         $academicRecord->update($request->all());
         return response()->json($academicRecord);
     }
 
     public function destroyRecord(AcademicRecord $academicRecord)
     {
+        $academicRecord = AcademicRecord::findOrFail($academicRecord->id);
         $academicRecord->delete();
+        return response()->json(null, 200);
     }
 
     public function transformRecord($data)

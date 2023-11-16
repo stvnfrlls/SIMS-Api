@@ -34,12 +34,14 @@ class UserController extends Controller
 
     public function updateUser(UserRequest $request, User $user)
     {
+        $user = User::findOrFail($user->id);
         $user->update($request->all());
         return response()->json($user);
     }
 
     public function removeUser(User $user)
     {
+        $user = User::findOrFail($user->id);
         $user->delete();
     }
 }

@@ -39,8 +39,6 @@ class StudentRecordController extends Controller
             ->where('id', $studentRecord)
             ->get();
 
-        // $studentRecord->load("attendanceRecord");
-
         $studentRecord->each(function ($studentData) {
             $studentData->academicRecord->each(function ($academicRecord) {
                 $academicRecord->load("curricula");
@@ -56,13 +54,16 @@ class StudentRecordController extends Controller
 
     public function updateStudent(StudentRecordRequest $request, StudentRecord $studentRecord)
     {
-        $studentRecord->update($request->all());
-        return response()->json($studentRecord);
+        $student = StudentRecord::findOrFail($studentRecord->id);
+        $student->update($request->all());
+        return response()->json($student);
     }
 
     public function destroyStudent(StudentRecord $studentRecord)
     {
-        $studentRecord->delete();
+        $student = StudentRecord::findOrFail($studentRecord->id);
+        $student->delete();
+        return response()->json(null, 200);
     }
 
     public function transformStudentRecord($data)

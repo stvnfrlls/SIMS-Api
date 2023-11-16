@@ -26,12 +26,14 @@ class UserAddressController extends Controller
 
     public function updateUserAddress(UserAddressRequest $request, UserAddress $userAddress)
     {
+        $address = UserAddress::findOrFail($userAddress->id);
         $userAddress->update($request->all());
         return response()->json($userAddress);
     }
 
     public function deleteUserAddress(UserAddress $userAddress)
     {
-        $userAddress->delete();
+        $address = UserAddress::findOrFail($userAddress->id);
+        $address->delete();
     }
 }

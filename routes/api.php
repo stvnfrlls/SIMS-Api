@@ -28,15 +28,15 @@ Route::middleware("auth:api")->group(function () {
         Route::get("/", [UserController::class, "getAll"]);
         Route::get("{user}", [UserController::class, "getUser"]);
         Route::post("store", [UserController::class, "storeUser"]);
-        Route::post("{user}", [UserController::class, "updateUser"]);
-        Route::post("{user}", [UserController::class, "deleteUser"]);
+        Route::put("{user}", [UserController::class, "updateUser"]);
+        Route::delete("{user}", [UserController::class, "deleteUser"]);
 
         Route::prefix("/address")->group(function () {
             Route::get("/", [UserAddressController::class, "getAllAddress"]);
             Route::get("{userAddress}", [UserAddressController::class, "getUserAddress"]);
             Route::post("store", [UserAddressController::class, "storeUserAddress"]);
-            Route::post("{userAddress}", [UserAddressController::class, "updateUserAddress"]);
-            Route::post("{userAddress}", [UserAddressController::class, "deleteUserAddress"]);
+            Route::put("{userAddress}", [UserAddressController::class, "updateUserAddress"]);
+            Route::delete("{userAddress}", [UserAddressController::class, "deleteUserAddress"]);
         });
     });
 
@@ -44,16 +44,16 @@ Route::middleware("auth:api")->group(function () {
         Route::get("/", [FacultyRecordController::class, "getAllFaculty"]);
         Route::get("{facultyRecord}", [FacultyRecordController::class, "getFaculty"]);
         Route::post("store", [FacultyRecordController::class, "storeFaculty"]);
-        Route::post("{facultyRecord}", [FacultyRecordController::class, "updateFaculty"]);
-        Route::post("{facultyRecord}", [FacultyRecordController::class, "deleteFaculty"]);
+        Route::put("{facultyRecord}", [FacultyRecordController::class, "updateFaculty"]);
+        Route::delete("{facultyRecord}", [FacultyRecordController::class, "deleteFaculty"]);
     });
 
     Route::prefix("/student")->group(function () {
         Route::get("/", [StudentRecordController::class, "getAllStudent"]);
         Route::get("{studentRecord}", [StudentRecordController::class, "getStudent"]);
         Route::post("store", [StudentRecordController::class, "storeStudent"]);
-        Route::post("{studentRecord}", [StudentRecordController::class, "updateStudent"]);
-        Route::post("{studentRecord}", [StudentRecordController::class, "deleteStudent"]);
+        Route::put("{studentRecord}", [StudentRecordController::class, "updateStudent"]);
+        Route::delete("{studentRecord}", [StudentRecordController::class, "deleteStudent"]);
 
         Route::prefix("/attendance")->group(function () {
             Route::get("/{attendanceRecord}", [AttendanceRecordController::class, "showRecord"]);
@@ -94,6 +94,14 @@ Route::middleware("auth:api")->group(function () {
             Route::get("{gradeId}", [ClasslistController::class, "show"]);
         });
 
+        Route::prefix("/curriculum")->group(function () {
+            Route::get("/", [CurriculumController::class, "index"]);
+            Route::get("{curriculum}", [CurriculumController::class, "show"]);
+            Route::post("store", [CurriculumController::class, "store"]);
+            Route::put("{curriculum}", [CurriculumController::class, "update"]);
+            Route::delete("{curriculum}", [CurriculumController::class, "delete"]);
+        });
+
         // Route::prefix("/attendance")->group(function () {
         //     Route::get("/", [AttendanceRecordController::class, "index"]);
         //     Route::get("{attendanceRecord}", [AttendanceRecordController::class, "show"]);
@@ -107,14 +115,6 @@ Route::middleware("auth:api")->group(function () {
         //     Route::get("{cityMunicipalities}", [CityMunicipalityController::class, "show"]);
         // });
 
-        // Route::prefix("/curriculum")->group(function () {
-        //     Route::get("/", [CurriculumController::class, "index"]);
-        //     Route::get("{curriculum}", [CurriculumController::class, "show"]);
-        //     Route::post("store", [CurriculumController::class, "store"]);
-        //     Route::post("{curriculum}", [CurriculumController::class, "update"]);
-        //     Route::post("{curriculum}", [CurriculumController::class, "delete"]);
-        // });
-
         // Route::prefix("/gradelevel")->group(function () {
         //     Route::get("/", [GradeLevelController::class, "index"]);
         //     Route::get("{gradeLevel}", [GradeLevelController::class, "show"]);
@@ -122,6 +122,5 @@ Route::middleware("auth:api")->group(function () {
         //     Route::post("{gradeLevel}", [GradeLevelController::class, "update"]);
         //     Route::post("{gradeLevel}", [GradeLevelController::class, "delete"]);
         // });
-
     });
 });

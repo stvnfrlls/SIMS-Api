@@ -44,13 +44,16 @@ class AdvisoryClassController extends Controller
 
     public function updateAdvisoryClass(AdvisoryClassRequest $request, AdvisoryClass $advisoryClass)
     {
-        $advisoryClass->update($request->all());
-        return response()->json($advisoryClass);
+        $advisory = AdvisoryClass::findOrFail($advisoryClass->id);
+        $advisory->update($request->all());
+        return response()->json($advisory);
     }
 
     public function destroyAdvisoryClass(AdvisoryClass $advisoryClass)
     {
-        $advisoryClass->delete();
+        $advisory = AdvisoryClass::findOrFail($advisoryClass->id);
+        $advisory->delete();
+        return response()->json(null, 200);
     }
 
     public function transformAdvisoryClass($advisoryClass)
