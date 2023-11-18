@@ -102,25 +102,27 @@ Route::middleware("auth:api")->group(function () {
             Route::delete("{curriculum}", [CurriculumController::class, "delete"]);
         });
 
-        // Route::prefix("/attendance")->group(function () {
-        //     Route::get("/", [AttendanceRecordController::class, "index"]);
-        //     Route::get("{attendanceRecord}", [AttendanceRecordController::class, "show"]);
-        //     Route::post("store", [AttendanceRecordController::class, "store"]);
-        //     Route::post("{attendanceRecord}", [AttendanceRecordController::class, "update"]);
-        //     Route::post("{attendanceRecord}", [AttendanceRecordController::class, "delete"]);
-        // });
+        Route::prefix("/citymunicipality")->group(function () {
+            Route::get("/", [CityMunicipalityController::class, "index"]);
+            Route::get("{cityMunicipalities}", [CityMunicipalityController::class, "show"]);
+        });
 
-        // Route::prefix("/citymunicipality")->group(function () {
-        //     Route::get("/", [CityMunicipalityController::class, "index"]);
-        //     Route::get("{cityMunicipalities}", [CityMunicipalityController::class, "show"]);
-        // });
+        Route::prefix("/gradelevel")->group(function () {
+            Route::get("/", [GradeLevelController::class, "index"]);
+            Route::get("{gradeLevel}", [GradeLevelController::class, "show"]);
+            Route::post("store", [GradeLevelController::class, "store"]);
+            Route::put("{gradeLevel}", [GradeLevelController::class, "update"]);
+            Route::delete("{gradeLevel}", [GradeLevelController::class, "delete"]);
+        });
 
-        // Route::prefix("/gradelevel")->group(function () {
-        //     Route::get("/", [GradeLevelController::class, "index"]);
-        //     Route::get("{gradeLevel}", [GradeLevelController::class, "show"]);
-        //     Route::post("store", [GradeLevelController::class, "store"]);
-        //     Route::post("{gradeLevel}", [GradeLevelController::class, "update"]);
-        //     Route::post("{gradeLevel}", [GradeLevelController::class, "delete"]);
-        // });
+        Route::prefix("/attendance")->group(function () {
+            Route::get("/", [AttendanceRecordController::class, "index"]);
+            Route::get("/present", [AttendanceRecordController::class, "getPresent"]);
+            Route::get("/late", [AttendanceRecordController::class, "getLate"]);
+            Route::get("/{gradeId}", [AttendanceRecordController::class, "getAttendanceByGradeId"]);
+            Route::post("store", [AttendanceRecordController::class, "store"]);
+            Route::post("{attendanceRecord}", [AttendanceRecordController::class, "update"]);
+            Route::post("{attendanceRecord}", [AttendanceRecordController::class, "delete"]);
+        });
     });
 });
