@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\FacultyScheduleRequest;
 use App\Models\FacultySchedule;
+use Illuminate\Http\Request;
 
 class FacultyScheduleController extends Controller
 {
@@ -23,8 +24,29 @@ class FacultyScheduleController extends Controller
 
     public function storeSchedule(FacultyScheduleRequest $request)
     {
-        $faculty = FacultySchedule::create($request->all());
-        return response()->json($faculty);
+        $facultySchedule = FacultySchedule::select('facultyId', 'subjectId', 'gradeId', 'startTime', 'endTime')
+            ->where('facultyId', $request->facultyId)
+            ->where('subjectId', $request->subjectId)
+            ->where('gradeId', $request->gradeId)
+            ->get();
+
+        $conflictingSchedule = $this->findConflictingSchedule($facultySchedule, $request->startTime, $request->endTime);
+
+        if ($conflictingSchedule) {
+            return response()->json([$conflictingSchedule, 'conflict']);
+        } else {
+            $setSchedule = new FacultySchedule([
+                'academicYear' => '2023-2024',
+                'facultyId' => $request->facultyId,
+                'subjectId' => $request->subjectId,
+                'gradeId' => $request->gradeId,
+                'startTime' => $request->startTime,
+                'endTime' => $request->endTime
+            ]);
+            $setSchedule->save();
+
+            return response()->json($setSchedule);
+        }
     }
 
     public function getSchedule($facultySchedule)
@@ -44,9 +66,22 @@ class FacultyScheduleController extends Controller
 
     public function updateSchedule(FacultyScheduleRequest $request, FacultySchedule $facultySchedule)
     {
-        $schedule = FacultySchedule::findOrFail($request->id);
-        $schedule->update($request->all());
-        return response()->json($schedule);
+        $conflictingSchedule = $this->findConflictingSchedule($facultySchedule, $request->startTime, $request->endTime);
+
+        if ($conflictingSchedule) {
+            return response()->json([$conflictingSchedule, 'conflict']);
+        } else {
+            $facultySchedule->update([
+                'academicYear' => '2023-2024',
+                'facultyId' => $request->facultyId,
+                'subjectId' => $request->subjectId,
+                'gradeId' => $request->gradeId,
+                'startTime' => $request->startTime,
+                'endTime' => $request->endTime
+            ]);
+
+            return response()->json($facultySchedule);
+        }
     }
 
     public function destroySchedule(FacultySchedule $facultySchedule)
@@ -54,6 +89,28 @@ class FacultyScheduleController extends Controller
         $faculty = FacultySchedule::findOrFail($facultySchedule->id);
         $faculty->delete();
         return response()->json(null, 200);
+    }
+
+    private function findConflictingSchedule($facultySchedule, $inputStart, $inputOut)
+    {
+        $conflictingSchedule = null;
+
+        foreach ($facultySchedule as $schedule) {
+            $startTime = strtotime($inputStart);
+            $endTime = strtotime($inputOut);
+            $scheduleStart = strtotime($schedule['startTime']);
+            $scheduleEnd = strtotime($schedule['endTime']);
+
+            if (
+                ($startTime >= $scheduleStart && $startTime >= $scheduleEnd) ||
+                ($endTime >= $scheduleStart && $endTime >= $scheduleEnd)
+            ) {
+                $conflictingSchedule = $schedule;
+                break;
+            }
+        }
+
+        return $conflictingSchedule;
     }
 
     public function transformSchedule($schedule)
