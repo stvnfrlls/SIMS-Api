@@ -24,12 +24,12 @@ class FacultyScheduleRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "academicYear" => "required|string|max:10",
+            "academicYear" => "required|string",
             "facultyId" => "required|exists:faculty_records,id",
             "subjectId" => "required|exists:curricula,id",
             "gradeId" => "required|exists:grade_levels,id",
-            "startTime" => "required",
-            "endTime" => "required",
+            "startTime" => "required|string",
+            "endTime" => "required|string",
         ];
     }
 
